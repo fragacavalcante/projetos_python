@@ -1,5 +1,6 @@
 # -*- coding: latin-1 -*-
-import os,sys
+import os
+import sys
 
 def validaIP(ip):
 		ip_decimal = ip.split('.')
@@ -176,21 +177,39 @@ def telaInicial():
 		print ('6 - Sair')
 				
 		opcao = input('\t\tDigite a opção Desejada:')
-		print ('\n' * 100)
+		
+		if opcao.isdigit():
+			opcao = int(opcao)
+		else:
+			limparTela()
+			continue	
 
-		if opcao == '1':
-			ip = input("Digite o endereço IP da rede:")
-			mascara = input('Digite a máscara:')
-		elif opcao == '6':
-			print ('\n' * 100)
+		if opcao == 6:
+			limparTela()
 			print ('Saindo')
 			break
+		elif opcao >= 6:
+			limparTela()
+			continue
+		
+		limparTela()
+		ip = input("Digite o endereço IP da rede:")
+		mascara = input('Digite a máscara:')
 
-		if validaIP(ip) == 1 or validaIP(mascara) == 1 :
-			print ('Endereço Inválido')
+		if validaIP(ip) != 1 or validaIP(mascara) != 1:	
+			if opcao == 1:
+				calculaFaixaEnderecosSubredes(ip,mascara)
+			elif opcao == 2:
+				calculaSubredeEspecifica(ip, mascara)
+			elif opcao == 3:
+				print(calculaQuantidadeSubredes(ip, mascara), 'Subrede(s)')
+			elif opcao == 4:
+				print(calculaQuantidadeHostSubrede(ip, mascara), 'Host(s)')		
+			elif opcao == 5:
+				verificaClasse(ip)
 		else:
-			calculaFaixaEnderecosSubredes(ip,mascara)
-										
+			print ('Endereço Inválido')
+		
 		voltar = input('Deseja voltar a tela inicial (S/N):').upper()
 		limparTela()
 				
@@ -198,6 +217,3 @@ def telaInicial():
 			limparTela()
 			print ('Saindo...')
 			break
-
-telaInicial()
-
