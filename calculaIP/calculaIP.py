@@ -4,14 +4,15 @@ import sys
 
 def validaIP(ip):
 		ip_decimal = ip.split('.')
-
-		if ip_decimal.count('.') > 3:
-			return 1
+		separador_decimal =  ip.count('.')
 		
+		if separador_decimal != 3:
+			return 1
+
 		for i in ip_decimal:
 			if not i.isdigit():
 				return 1
-			if int(i) > 255:
+			if int(i) > 255 or int(i) < 0:
 				return 1
 
 def verificaClasse(ip):
@@ -144,11 +145,8 @@ def calculaFaixaEnderecosSubredes(ip, mascara):
 		# Formata os IPs adequadamente para exibir na tela
 
 		endereco_ip_rede_dec = "".join([str(ip_subrede1[0]),'.',str(ip_subrede1[1]),'.',str(ip_subrede1[2]),'.',str(ip_subrede1[3])])
-		
-		endereco_ip_inicial_dec = "".join([str(ip_subrede1[0]),'.',str(ip_subrede1[1]),'.',str(ip_subrede1[2]),'.',str(ip_subrede1[3]+1)])
-			 
-		endereco_ip_final_dec = "".join([str(ip_subrede2[0]),'.',str(ip_subrede2[1]),'.',str(ip_subrede2[2]),'.',str(ip_subrede2[3]-1)])
-		   
+		endereco_ip_inicial_dec = "".join([str(ip_subrede1[0]),'.',str(ip_subrede1[1]),'.',str(ip_subrede1[2]),'.',str(ip_subrede1[3]+1)])			 
+		endereco_ip_final_dec = "".join([str(ip_subrede2[0]),'.',str(ip_subrede2[1]),'.',str(ip_subrede2[2]),'.',str(ip_subrede2[3]-1)])   
 		endereco_ip_broadcast_dec = "".join([str(ip_subrede2[0]),'.',str(ip_subrede2[1]),'.',str(ip_subrede2[2]),'.',str(ip_subrede2[3])])
 
 		print (str(numero_subrede).ljust(4), endereco_ip_rede_dec.ljust(20), endereco_ip_inicial_dec.ljust(20), endereco_ip_final_dec.ljust(20), endereco_ip_broadcast_dec)
@@ -163,11 +161,25 @@ def calculaFaixaEnderecosSubredes(ip, mascara):
 def limparTela():
 	print ('\n' * 100)
 
+def qualClasse(ip):
+	classe = verificaClasse(ip)
+	if classe == 1:
+		return ("Classe A")
+	elif classe == 2:
+		return ("Classe B")
+	elif classe == 3:
+		return ("Classe C")
+	elif classe == 4:
+		return ("Classe D")
+	elif classe == 5:
+		return ("Classe E")	
+	else:
+		return ("Endereço Inválido")
 
 def telaInicial():
-
 	limparTela()
-		
+	mascara = '255.0.0.0'
+
 	while True:
 		print ('1 - Calcular faixa de subredes')
 		print ('2 - Encontrar faixa de endereços para uma subrede específica')
@@ -194,7 +206,9 @@ def telaInicial():
 		
 		limparTela()
 		ip = input("Digite o endereço IP da rede:")
-		mascara = input('Digite a máscara:')
+
+		if opcao != 5:
+			mascara = input('Digite a máscara:')
 
 		if validaIP(ip) != 1 or validaIP(mascara) != 1:	
 			if opcao == 1:
@@ -206,7 +220,7 @@ def telaInicial():
 			elif opcao == 4:
 				print(calculaQuantidadeHostSubrede(ip, mascara), 'Host(s)')		
 			elif opcao == 5:
-				verificaClasse(ip)
+				print (qualClasse(ip))
 		else:
 			print ('Endereço Inválido')
 		
@@ -217,3 +231,5 @@ def telaInicial():
 			limparTela()
 			print ('Saindo...')
 			break
+
+telaInicial()
